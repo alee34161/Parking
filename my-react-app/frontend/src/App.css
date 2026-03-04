@@ -1,0 +1,694 @@
+:root {
+  --primary-color: #2563eb;
+  --secondary-color: #1e40af;
+  --success-color: #22c55e;
+  --warning-color: #eab308;
+  --danger-color: #dc2626;
+  --gray-50: #f9fafb;
+  --gray-100: #f3f4f6;
+  --gray-200: #e5e7eb;
+  --gray-300: #d1d5db;
+  --gray-700: #374151;
+  --gray-900: #111827;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+#root {
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #ffffff;
+  color: var(--gray-900);
+}
+
+.app {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Header */
+.header {
+  background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+  color: white;
+  padding: 0.75rem 1.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  flex-shrink: 0;
+}
+
+.header-content {
+  width: 100%;
+}
+
+.header h1 {
+  font-size: 1.35rem;
+  font-weight: 700;
+  margin-bottom: 0.4rem;
+}
+
+.header-links {
+  display: flex;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.header-links a {
+  color: rgba(255, 255, 255, 0.95);
+  text-decoration: none;
+  font-size: 0.8rem;
+  transition: color 0.2s;
+  font-weight: 500;
+}
+
+.header-links a:hover {
+  color: white;
+  text-decoration: underline;
+}
+
+/* Announcements */
+.announcements {
+  width: 100%;
+  background: #fef3c7;
+  border-bottom: 3px solid var(--warning-color);
+  padding: 0.6rem 1.5rem;
+  flex-shrink: 0;
+}
+
+.announcement {
+  background: transparent;
+  padding: 0;
+  margin: 0;
+  border: none;
+  box-shadow: none;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.announcement-high {
+  background: #fef3c7;
+}
+
+.announcement-critical {
+  background: #fee2e2;
+}
+
+.announcement-icon {
+  font-size: 1.25rem;
+}
+
+.announcement-lot {
+  color: var(--gray-700);
+  font-style: italic;
+}
+
+/* Error Banner */
+.error-banner {
+  background: #fee2e2;
+  border-bottom: 2px solid #ef4444;
+  color: #991b1b;
+  padding: 0.75rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.9rem;
+}
+
+.error-banner button {
+  background: var(--danger-color);
+  color: white;
+  border: none;
+  padding: 0.4rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: background 0.2s;
+}
+
+.error-banner button:hover {
+  background: #b91c1c;
+}
+
+/* Main Content - Full Width Layout */
+.main-content {
+  flex: 1;
+  width: 100%;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.content-grid {
+  display: grid;
+  grid-template-columns: 1fr 250px;
+  gap: 0;
+  flex: 1;
+  height: calc(100vh - 100px); /* Adjust based on header height */
+  max-height: calc(100vh - 100px);
+}
+
+/* Map Section - Takes Most of Screen */
+.map-section {
+  background: white;
+  padding: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  width: 100%;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+  padding: 0 0.25rem;
+  flex-shrink: 0;
+}
+
+.section-header h2 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--gray-900);
+}
+
+.last-update {
+  font-size: 0.75rem;
+  color: var(--gray-700);
+}
+
+/* Filter Section - Sidebar */
+.filter-section {
+  background: var(--gray-50);
+  padding: 1rem 1rem;
+  border-left: 1px solid var(--gray-200);
+  height: 100%;
+  overflow-y: auto;
+  width: 250px;
+  flex-shrink: 0;
+}
+
+.filter-section h3 {
+  font-size: 0.9rem;
+  font-weight: 700;
+  margin-bottom: 0.875rem;
+  color: var(--gray-900);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.filter-options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.filter-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 4px;
+  transition: background 0.2s;
+  font-size: 0.9rem;
+}
+
+.filter-checkbox:hover {
+  background: white;
+}
+
+.filter-checkbox input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: var(--primary-color);
+}
+
+.filter-checkbox span {
+  font-weight: 500;
+}
+
+.filter-summary {
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 2px solid var(--gray-300);
+  font-size: 0.85rem;
+  color: var(--gray-700);
+  text-align: center;
+  font-weight: 600;
+}
+
+/* Lot Details - Below Map */
+.lot-details {
+  background: white;
+  padding: 1rem 1.5rem;
+  border-top: 3px solid var(--gray-200);
+  flex-shrink: 0;
+  max-height: 30vh;
+  overflow-y: auto;
+}
+
+.lot-details h2 {
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin-bottom: 1.25rem;
+  color: var(--gray-900);
+}
+
+.details-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.detail-card {
+  background: var(--gray-50);
+  padding: 1rem;
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  border: 2px solid transparent;
+  transition: border-color 0.2s;
+}
+
+.detail-card:hover {
+  border-color: var(--primary-color);
+}
+
+.detail-label {
+  font-size: 0.8rem;
+  color: var(--gray-700);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.detail-value {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--gray-900);
+}
+
+.detail-value.available {
+  color: var(--success-color);
+}
+
+.status-open {
+  color: var(--success-color);
+}
+
+.status-closed {
+  color: var(--danger-color);
+}
+
+.status-limited {
+  color: var(--warning-color);
+}
+
+.permit-types {
+  margin-top: 1rem;
+  padding: 1rem;
+  background: var(--gray-50);
+  border-radius: 6px;
+  border-left: 4px solid var(--primary-color);
+}
+
+.permit-types strong {
+  font-size: 0.9rem;
+  color: var(--gray-700);
+}
+
+.permit-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.permit-badge {
+  background: var(--primary-color);
+  color: white;
+  padding: 0.35rem 0.75rem;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.lot-info {
+  margin-top: 1rem;
+}
+
+.info-badge {
+  display: inline-block;
+  background: var(--gray-100);
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.data-timestamp {
+  margin-top: 1rem;
+  font-size: 0.8rem;
+  color: var(--gray-700);
+  font-style: italic;
+}
+
+/* Footer */
+.footer {
+  background: var(--gray-900);
+  color: var(--gray-300);
+  padding: 1.25rem 2rem;
+  text-align: center;
+  margin-top: auto;
+}
+
+.footer p {
+  font-size: 0.85rem;
+  margin-bottom: 0.35rem;
+}
+
+/* Loading State */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  gap: 1rem;
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid var(--gray-200);
+  border-top-color: var(--primary-color);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .content-grid {
+    grid-template-columns: 1fr;
+    height: auto;
+  }
+  
+  .filter-section {
+    border-left: none;
+    border-top: 1px solid var(--gray-200);
+    max-height: 250px;
+    width: 100%;
+  }
+
+  .map-section {
+    min-height: 400px;
+  }
+}
+
+@media (max-width: 768px) {
+  .header {
+    padding: 0.75rem 1rem;
+  }
+  
+  .header h1 {
+    font-size: 1.15rem;
+  }
+  
+  .header-links {
+    gap: 0.875rem;
+  }
+  
+  .announcements {
+    padding: 0.5rem 1rem;
+  }
+
+  .lot-details {
+    padding: 0.875rem 1rem;
+  }
+
+  .details-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Filter Section */
+.filter-section {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  height: fit-content;
+}
+
+.filter-section h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: var(--gray-900);
+}
+
+.filter-options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.filter-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+
+.filter-checkbox:hover {
+  background: var(--gray-50);
+}
+
+.filter-checkbox input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}
+
+.filter-summary {
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--gray-200);
+  font-size: 0.9rem;
+  color: var(--gray-700);
+}
+
+/* Lot Details */
+.lot-details {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.lot-details h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  color: var(--gray-900);
+}
+
+.details-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.detail-card {
+  background: var(--gray-50);
+  padding: 1rem;
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.detail-label {
+  font-size: 0.85rem;
+  color: var(--gray-700);
+  font-weight: 500;
+}
+
+.detail-value {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--gray-900);
+}
+
+.detail-value.available {
+  color: var(--success-color);
+}
+
+.status-open {
+  color: var(--success-color);
+}
+
+.status-closed {
+  color: var(--danger-color);
+}
+
+.status-limited {
+  color: var(--warning-color);
+}
+
+.permit-types {
+  margin-top: 1rem;
+  padding: 1rem;
+  background: var(--gray-50);
+  border-radius: 6px;
+}
+
+.permit-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.permit-badge {
+  background: var(--primary-color);
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.lot-info {
+  margin-top: 1rem;
+}
+
+.info-badge {
+  display: inline-block;
+  background: var(--gray-100);
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
+.data-timestamp {
+  margin-top: 1rem;
+  font-size: 0.85rem;
+  color: var(--gray-700);
+  font-style: italic;
+}
+
+/* Footer */
+.footer {
+  background: var(--gray-900);
+  color: var(--gray-300);
+  padding: 2rem;
+  text-align: center;
+  margin-top: auto;
+}
+
+.footer p {
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+}
+
+/* Loading State */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  gap: 1rem;
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid var(--gray-200);
+  border-top-color: var(--primary-color);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .content-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .filter-section {
+    order: -1;
+  }
+}
+
+@media (max-width: 768px) {
+  .header {
+    padding: 1rem 1.5rem;
+  }
+  
+  .header h1 {
+    font-size: 1.5rem;
+  }
+  
+  .header-links {
+    gap: 1rem;
+  }
+  
+  .main-content {
+    padding: 1rem 1.5rem;
+  }
+  
+  .details-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .announcements {
+    padding: 0 1.5rem;
+  }
+}
