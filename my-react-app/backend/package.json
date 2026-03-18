@@ -16,7 +16,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "debug-parser": "node scripts/debug-parser.js",
     "check-data": "node scripts/check-data.js",
-    "test-scraper": "node scripts/test-scraper.js"
+    "test-scraper": "node scripts/test-scraper.js",
+    "test-announcement": "node scripts/test-announcements.js"
   },
   "keywords": [
     "parking",

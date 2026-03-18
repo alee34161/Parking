@@ -3,7 +3,8 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-// AWS Aurora MySQL connection pool
+// for aurora if i want to deploy
+
 const pool = mysql.createPool({
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
@@ -15,25 +16,21 @@ const pool = mysql.createPool({
   queueLimit: 0,
   enableKeepAlive: true,
   keepAliveInitialDelay: 0,
-  // SSL/TLS for secure connection to Aurora
   ssl: process.env.DB_SSL === 'false' ? false : {
     rejectUnauthorized: true
   }
 });
 
-// Test database connection (async - won't block import)
 (async () => {
   try {
     const connection = await pool.getConnection();
-    console.log('✅ Successfully connected to MySQL/Aurora database');
+    console.log('MySQL/Aurora successfully connected');
     connection.release();
   } catch (err) {
-    console.error('❌ MySQL/Aurora connection failed:', err.message);
-    console.error('Make sure your .env has correct DB_HOST, DB_USER, DB_PASSWORD, DB_NAME');
+    console.error('MySQL/Aurora connection failed: ', err.message);
   }
 })();
 
-// Helper function to execute queries safely
 export async function query(sql, params = []) {
   try {
     const [results] = await pool.execute(sql, params);
@@ -44,7 +41,6 @@ export async function query(sql, params = []) {
   }
 }
 
-// Helper function for transactions
 export async function transaction(callback) {
   const connection = await pool.getConnection();
   await connection.beginTransaction();

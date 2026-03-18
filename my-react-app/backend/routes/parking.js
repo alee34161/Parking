@@ -159,37 +159,17 @@ router.get('/lots/:id/history', async (req, res, next) => {
   }
 });
 
-// GET /api/parking/announcements - Get active service announcements
+// GET /api/parking/announcements - Get active service announcements (from memory cache)
 router.get('/announcements', async (req, res, next) => {
   try {
-    const announcements = await query(`
-      SELECT 
-        sa.id,
-        sa.title,
-        sa.message,
-        sa.priority,
-        sa.start_date,
-        sa.end_date,
-        sa.created_at,
-        pl.name as parking_lot_name
-      FROM service_announcements sa
-      LEFT JOIN parking_lots pl ON sa.parking_lot_id = pl.id
-      WHERE sa.is_active = 1
-        AND (sa.start_date IS NULL OR sa.start_date <= DATE('now'))
-        AND (sa.end_date IS NULL OR sa.end_date >= DATE('now'))
-      ORDER BY 
-        CASE sa.priority 
-          WHEN 'critical' THEN 1
-          WHEN 'high' THEN 2
-          WHEN 'medium' THEN 3
-          WHEN 'low' THEN 4
-        END,
-        sa.created_at DESC
-    `);
+    // Import the cache getter from scraper
+    const { getCachedAnnouncements } = await import('../services/scraper.js');
+    const { announcements, lastUpdate } = getCachedAnnouncements();
 
     res.json({
       success: true,
-      data: announcements
+      data: announcements,
+      lastUpdate: lastUpdate
     });
   } catch (error) {
     next(error);

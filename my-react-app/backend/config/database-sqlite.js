@@ -9,7 +9,6 @@ const __dirname = path.dirname(__filename);
 const dbPath = path.join(__dirname, '..', 'parking.db');
 const db = new Database(dbPath, { verbose: console.log });
 
-console.log('✅ SQLite database connected:', dbPath);
 
 // Enable foreign keys
 db.pragma('foreign_keys = ON');

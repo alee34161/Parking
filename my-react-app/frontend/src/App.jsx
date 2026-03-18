@@ -115,19 +115,84 @@ function App() {
       <header className="header">
         <div className="header-content">
           <h1>CSUF Parking Availability</h1>
-          <nav className="header-links">
-            <a href="https://parking.fullerton.edu" target="_blank" rel="noopener noreferrer">
-              Parking Services
-            </a>
-            <a href="https://parking.fullerton.edu/permits/" target="_blank" rel="noopener noreferrer">
-              Buy Permits
-            </a>
-            <a href="https://parking.fullerton.edu/transportation/" target="_blank" rel="noopener noreferrer">
-              Transportation
-            </a>
-            <a href="https://parking.fullerton.edu/ParkMobile.aspx" target="_blank" rel="noopener noreferrer">
-              ParkMobile
-            </a>
+          <nav className="header-nav">
+            <div className="dropdown">
+              <button className="dropdown-button">Permits ▾</button>
+              <div className="dropdown-content">
+                <a href="https://parking.fullerton.edu/permits/" target="_blank" rel="noopener noreferrer">
+                  Buy Permits
+                </a>
+                <a href="https://parking.fullerton.edu/permits/permit-types.php" target="_blank" rel="noopener noreferrer">
+                  Permit Types
+                </a>
+                <a href="https://parking.fullerton.edu/permits/temp-permits.php" target="_blank" rel="noopener noreferrer">
+                  Temporary Permits
+                </a>
+                <a href="https://parking.fullerton.edu/permits/faq.php" target="_blank" rel="noopener noreferrer">
+                  Permit FAQs
+                </a>
+              </div>
+            </div>
+
+            <div className="dropdown">
+              <button className="dropdown-button">Tickets ▾</button>
+              <div className="dropdown-content">
+                <a href="https://parking.fullerton.edu/citations/" target="_blank" rel="noopener noreferrer">
+                  Pay Citations
+                </a>
+                <a href="https://parking.fullerton.edu/citations/appeals.php" target="_blank" rel="noopener noreferrer">
+                  Appeal a Citation
+                </a>
+                <a href="https://parking.fullerton.edu/citations/faq.php" target="_blank" rel="noopener noreferrer">
+                  Citation FAQs
+                </a>
+              </div>
+            </div>
+
+            <div className="dropdown">
+              <button className="dropdown-button">Events ▾</button>
+              <div className="dropdown-content">
+                <a href="https://parking.fullerton.edu/events/" target="_blank" rel="noopener noreferrer">
+                  Event Parking
+                </a>
+                <a href="https://parking.fullerton.edu/events/special-events.php" target="_blank" rel="noopener noreferrer">
+                  Special Events
+                </a>
+                <a href="https://parking.fullerton.edu/events/game-day.php" target="_blank" rel="noopener noreferrer">
+                  Game Day Parking
+                </a>
+              </div>
+            </div>
+
+            <div className="dropdown">
+              <button className="dropdown-button">Resources ▾</button>
+              <div className="dropdown-content">
+                <a href="https://parking.fullerton.edu/" target="_blank" rel="noopener noreferrer">
+                  Parking Services
+                </a>
+                <a href="https://parking.fullerton.edu/transportation/" target="_blank" rel="noopener noreferrer">
+                  Transportation Options
+                </a>
+                <a href="https://parking.fullerton.edu/ParkMobile.aspx" target="_blank" rel="noopener noreferrer">
+                  ParkMobile App
+                </a>
+                <a href="https://parking.fullerton.edu/maps/" target="_blank" rel="noopener noreferrer">
+                  Campus Maps
+                </a>
+                <a href="https://parking.fullerton.edu/contact/" target="_blank" rel="noopener noreferrer">
+                  Contact Us
+                </a>
+              </div>
+            </div>
+
+            <div className="dropdown">
+              <button className="dropdown-button">Parking News ▾</button>
+              <div className="dropdown-content">
+                <a href="https://parking.fullerton.edu/news/" target="_blank" rel="noopener noreferrer">
+                  Latest News & Updates
+                </a>
+              </div>
+            </div>
           </nav>
         </div>
       </header>
@@ -206,7 +271,19 @@ function App() {
         {/* Selected Lot Details */}
         {selectedLotData && (
           <section className="lot-details">
-            <h2>{selectedLotData.name}</h2>
+            <div className="lot-details-header">
+              <h2>{selectedLotData.name}</h2>
+              <button 
+                className="close-button" 
+                onClick={() => {
+                  setSelectedLot(null);
+                  setSelectedLotDetails(null);
+                }}
+                aria-label="Close details"
+              >
+                ✕
+              </button>
+            </div>
             <div className="details-grid">
               <div className="detail-card">
                 <span className="detail-label">Available Spaces</span>
@@ -234,6 +311,52 @@ function App() {
                 </span>
               </div>
             </div>
+            
+            {/* Prediction Section */}
+            {selectedLotData.prediction && selectedLotData.prediction.predicted_occupancy !== null && (
+              <div className="prediction-section">
+                <h3>📊 Next Hour Prediction</h3>
+                <div className="prediction-content">
+                  <div className="prediction-main">
+                    <div className="prediction-stat">
+                      <span className="prediction-label">Predicted Occupancy</span>
+                      <span className="prediction-value prediction-occupancy">
+                        {selectedLotData.prediction.predicted_occupancy.toFixed(1)}%
+                      </span>
+                    </div>
+                    <div className="prediction-stat">
+                      <span className="prediction-label">Expected Available</span>
+                      <span className="prediction-value prediction-available">
+                        ~{selectedLotData.prediction.predicted_available} spots
+                      </span>
+                    </div>
+                    <div className="prediction-stat">
+                      <span className="prediction-label">Confidence</span>
+                      <span className={`prediction-badge confidence-${selectedLotData.prediction.confidence}`}>
+                        {selectedLotData.prediction.confidence.charAt(0).toUpperCase() + 
+                         selectedLotData.prediction.confidence.slice(1)} 
+                        ({selectedLotData.prediction.confidence_percent}%)
+                      </span>
+                    </div>
+                  </div>
+                  <div className="prediction-meta">
+                    <small>
+                      Based on {selectedLotData.prediction.data_points} historical data points from similar 
+                      {' '}{selectedLotData.prediction.based_on_day} patterns around {selectedLotData.prediction.based_on_hour}:00
+                    </small>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {selectedLotData.prediction && selectedLotData.prediction.confidence === 'insufficient_data' && (
+              <div className="prediction-section prediction-no-data">
+                <h3>📊 Next Hour Prediction</h3>
+                <p className="prediction-message">
+                  Not enough historical data yet. Predictions will be available after a few weeks of data collection.
+                </p>
+              </div>
+            )}
             
             {selectedLotData.permit_types && selectedLotData.permit_types.length > 0 && (
               <div className="permit-types">
