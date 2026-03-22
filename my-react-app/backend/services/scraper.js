@@ -146,7 +146,7 @@ export async function scrapeServiceAnnouncements() {
       });
     }
 
-    // im paranoid so check the parking site too
+    // check the parking site too
     const availResponse = await axios.get(PARKING_URL, {
       timeout: 10000,
       headers: {

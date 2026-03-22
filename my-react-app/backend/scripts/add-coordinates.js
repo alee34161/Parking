@@ -5,15 +5,10 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-console.log('🗺️  Adding sample polygon coordinates to parking lots...\n');
-
 try {
   const dbPath = path.join(__dirname, '..', 'parking.db');
   const db = new BetterSqlite3(dbPath);
-  
-  // CSUF is approximately at: 33.8820° N, 117.8850° W
-  // These are SAMPLE polygons - you'll want to replace with actual lot boundaries
-  
+
   const polygons = {
     'Nutwood Structure': {
       lat: 33.8820,
@@ -94,20 +89,13 @@ try {
       name
     );
     
-    console.log(`✅ Updated ${name}`);
+    console.log(`Updated ${name}`);
   }
   
   db.close();
   
-  console.log('\n✅ All parking lots updated with sample coordinates!');
-  console.log('\n⚠️  NOTE: These are SAMPLE coordinates for testing.');
-  console.log('For production, you should:');
-  console.log('1. Go to https://studio.mapbox.com/');
-  console.log('2. Create a dataset and draw actual lot boundaries');
-  console.log('3. Export as GeoJSON and update the database');
-  console.log('\nYou can now start the server and see the lots on the map!');
-  
+  console.log('Successfully added coordinates to database\n');
 } catch (error) {
-  console.error('❌ Failed to add coordinates:', error.message);
+  console.error('Failed to add coordinates:', error.message);
   process.exit(1);
 }

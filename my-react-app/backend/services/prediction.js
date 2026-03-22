@@ -7,7 +7,6 @@ export async function predictNextHourOccupancy(lotId) {
     const currentHour = now.getHours();
     const nextHour = (currentHour + 1) % 24;
 
-    // only past 4 weeks
     const historicalData = await query(`
       SELECT 
         occupancy_percentage,
@@ -23,16 +22,46 @@ export async function predictNextHourOccupancy(lotId) {
     `, [lotId, currentDayOfWeek, nextHour]);
 
     if (historicalData.length === 0) {
+      const anyData = await query(`
+        SELECT 
+          occupancy_percentage,
+          available_spots,
+          total_spots,
+          scraped_at
+        FROM parking_snapshots
+        WHERE parking_lot_id = ?
+        ORDER BY scraped_at DESC
+        LIMIT 1
+      `, [lotId]);
+
+      if (anyData.length === 0) {
+        return {
+          predicted_occupancy: null,
+          predicted_available: null,
+          confidence: 'insufficient_data',
+          data_points: 0,
+          message: 'No data available yet. System is collecting data.'
+        };
+      }
+
+      const currentOccupancy = anyData[0].occupancy_percentage || 0;
+      const currentAvailable = anyData[0].available_spots || 0;
+      const totalSpots = anyData[0].total_spots;
+
       return {
-        predicted_occupancy: null,
-        predicted_available: null,
-        confidence: 'insufficient_data',
-        data_points: 0,
-        message: 'Not enough historical data for prediction'
+        predicted_occupancy: currentOccupancy,
+        predicted_available: currentAvailable,
+        confidence: 'very_low',
+        confidence_percent: 20,
+        data_points: 1,
+        standard_deviation: 0,
+        prediction_time: new Date(now.getTime() + 60 * 60 * 1000).toISOString(),
+        based_on_hour: nextHour,
+        based_on_day: getDayName(currentDayOfWeek),
+        message: 'Using current occupancy as baseline (limited historical data)'
       };
     }
 
-    // average
     const totalOccupancy = historicalData.reduce((sum, record) => {
       return sum + (record.occupancy_percentage || 0);
     }, 0);
@@ -44,12 +73,9 @@ export async function predictNextHourOccupancy(lotId) {
       return sum + (diff * diff);
     }, 0) / historicalData.length;
     
-
-    // deviation and data amount confidence
     const standardDeviation = Math.sqrt(variance);
 
     const totalSpots = historicalData[0].total_spots;
-    const predictedAvailable = Math.round(totalSpots * (1 - averageOccupancy / 100));
 
     let confidence = 'low';
     let confidencePercent = 0;
@@ -68,12 +94,14 @@ export async function predictNextHourOccupancy(lotId) {
     } else if (historicalData.length >= 6) {
       confidence = 'medium';
       confidencePercent = 60;
-    } else {
+    } else if (historicalData.length >= 3) {
       confidence = 'low';
-      confidencePercent = 40;
+      confidencePercent = 45;
+    } else {
+      confidence = 'very_low';
+      confidencePercent = 30;
     }
 
-    // last thing, recent trend effect for start of semester and whatnot
     const recentTrend = await getCurrentTrend(lotId);
     let trendAdjustedOccupancy = averageOccupancy;
     
@@ -104,7 +132,6 @@ export async function predictNextHourOccupancy(lotId) {
   }
 }
 
-
 async function getCurrentTrend(lotId) {
   try {
     const recentData = await query(`
@@ -127,7 +154,6 @@ async function getCurrentTrend(lotId) {
     return null;
   }
 }
-
 
 function getDayName(dayNum) {
   const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];

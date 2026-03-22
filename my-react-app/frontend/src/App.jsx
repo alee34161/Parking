@@ -13,20 +13,17 @@ function App() {
   const [error, setError] = useState(null);
   const [lastUpdate, setLastUpdate] = useState(null);
   
-  // Filter state
   const [permitFilters, setPermitFilters] = useState({
-    A: true,
-    B: true,
-    Student: true,
-    Faculty: true
+    'Student Parking': true,
+    'Employee Parking': true,
+    'Resident Parking (non-freshmen)': true,
+    'Hourly Parking': true
   });
 
-  // Fetch parking lots
   useEffect(() => {
     fetchParkingLots();
     fetchAnnouncements();
     
-    // Refresh every 5 minutes
     const interval = setInterval(() => {
       fetchParkingLots();
       fetchAnnouncements();
@@ -42,7 +39,7 @@ function App() {
       
       const data = await response.json();
       setParkingLots(data.data);
-      setLastUpdate(new Date(data.timestamp));
+      setLastUpdate(new Date());
       setLoading(false);
       setError(null);
     } catch (err) {
@@ -72,6 +69,7 @@ function App() {
       if (!response.ok) throw new Error('Failed to fetch lot details');
       
       const data = await response.json();
+      console.log('Lot details with prediction:', data.data);
       setSelectedLotDetails(data.data);
     } catch (err) {
       console.error('Error fetching lot details:', err);
@@ -85,7 +83,6 @@ function App() {
     }));
   };
 
-  // Get filtered lot IDs
   const getFilteredLotIds = () => {
     const activePermits = Object.keys(permitFilters).filter(key => permitFilters[key]);
     
@@ -111,7 +108,6 @@ function App() {
 
   return (
     <div className="app">
-      {/* Header */}
       <header className="header">
         <div className="header-content">
           <h1>CSUF Parking Availability</h1>
@@ -119,16 +115,16 @@ function App() {
             <div className="dropdown">
               <button className="dropdown-button">Permits ▾</button>
               <div className="dropdown-content">
-                <a href="https://parking.fullerton.edu/permits/" target="_blank" rel="noopener noreferrer">
-                  Buy Permits
+                <a href="https://csufparking.t2hosted.com/cmn/auth_ext.aspx" target="_blank" rel="noopener noreferrer">
+                  Parking Portal - Buy Permits
                 </a>
-                <a href="https://parking.fullerton.edu/permits/permit-types.php" target="_blank" rel="noopener noreferrer">
-                  Permit Types
+                <a href="https://parking.fullerton.edu/student/?itemID=484f-877a-d31e45-0" target="_blank" rel="noopener noreferrer">
+                  Student Permit Types
                 </a>
-                <a href="https://parking.fullerton.edu/permits/temp-permits.php" target="_blank" rel="noopener noreferrer">
+                <a href="https://parking.fullerton.edu/visitors/index.html?itemID=4a27-ace8-d31e45-0" target="_blank" rel="noopener noreferrer">
                   Temporary Permits
                 </a>
-                <a href="https://parking.fullerton.edu/permits/faq.php" target="_blank" rel="noopener noreferrer">
+                <a href="https://parking.fullerton.edu/faq/?itemID=4282-be36-d31e340-2" target="_blank" rel="noopener noreferrer">
                   Permit FAQs
                 </a>
               </div>
@@ -137,29 +133,14 @@ function App() {
             <div className="dropdown">
               <button className="dropdown-button">Tickets ▾</button>
               <div className="dropdown-content">
-                <a href="https://parking.fullerton.edu/citations/" target="_blank" rel="noopener noreferrer">
-                  Pay Citations
+                <a href="https://csufparking.t2hosted.com/cmn/auth_ext.aspx" target="_blank" rel="noopener noreferrer">
+                  Parking Portal - Pay/Appeal Citations
                 </a>
-                <a href="https://parking.fullerton.edu/citations/appeals.php" target="_blank" rel="noopener noreferrer">
-                  Appeal a Citation
+                <a href="https://parking.fullerton.edu/visitors/?itemID=49cb-a9f2-d31e126-4" target="_blank" rel="noopener noreferrer">
+                  Visitor Parking Ticket Policies
                 </a>
-                <a href="https://parking.fullerton.edu/citations/faq.php" target="_blank" rel="noopener noreferrer">
-                  Citation FAQs
-                </a>
-              </div>
-            </div>
-
-            <div className="dropdown">
-              <button className="dropdown-button">Events ▾</button>
-              <div className="dropdown-content">
-                <a href="https://parking.fullerton.edu/events/" target="_blank" rel="noopener noreferrer">
-                  Event Parking
-                </a>
-                <a href="https://parking.fullerton.edu/events/special-events.php" target="_blank" rel="noopener noreferrer">
-                  Special Events
-                </a>
-                <a href="https://parking.fullerton.edu/events/game-day.php" target="_blank" rel="noopener noreferrer">
-                  Game Day Parking
+                <a href="https://parking.fullerton.edu/forms-policies/?itemID=420a-a61c-d31e173-17" target="_blank" rel="noopener noreferrer">
+                  Parking Ticket Policies
                 </a>
               </div>
             </div>
@@ -167,29 +148,32 @@ function App() {
             <div className="dropdown">
               <button className="dropdown-button">Resources ▾</button>
               <div className="dropdown-content">
-                <a href="https://parking.fullerton.edu/" target="_blank" rel="noopener noreferrer">
-                  Parking Services
+                <a href="https://csufparking.t2hosted.com/cmn/auth_ext.aspx" target="_blank" rel="noopener noreferrer">
+                  Parking Portal
                 </a>
-                <a href="https://parking.fullerton.edu/transportation/" target="_blank" rel="noopener noreferrer">
-                  Transportation Options
+                <a href="https://parking.fullerton.edu/student/" target="_blank" rel="noopener noreferrer">
+                  Student Parking Information
                 </a>
-                <a href="https://parking.fullerton.edu/ParkMobile.aspx" target="_blank" rel="noopener noreferrer">
-                  ParkMobile App
+                <a href="https://parking.fullerton.edu/faculty-staff/" target="_blank" rel="noopener noreferrer">
+                  Faculty/Staff Parking Information
+                </a>
+                <a href="https://parking.fullerton.edu/forms-policies/index.html" target="_blank" rel="noopener noreferrer">
+                  Forms and Policies
+                </a>
+                <a href="https://parking.fullerton.edu/visitors/index.html" target="_blank" rel="noopener noreferrer">
+                  Visitors
                 </a>
                 <a href="https://parking.fullerton.edu/maps/" target="_blank" rel="noopener noreferrer">
-                  Campus Maps
-                </a>
-                <a href="https://parking.fullerton.edu/contact/" target="_blank" rel="noopener noreferrer">
-                  Contact Us
+                  Campus Map
                 </a>
               </div>
             </div>
 
             <div className="dropdown">
-              <button className="dropdown-button">Parking News ▾</button>
+              <button className="dropdown-button">Parking Events and Notices ▾</button>
               <div className="dropdown-content">
-                <a href="https://parking.fullerton.edu/news/" target="_blank" rel="noopener noreferrer">
-                  Latest News & Updates
+                <a href="https://parking.fullerton.edu/" target="_blank" rel="noopener noreferrer">
+                  Homepage
                 </a>
               </div>
             </div>
@@ -197,7 +181,6 @@ function App() {
         </div>
       </header>
 
-      {/* Service Announcements */}
       {announcements.length > 0 && (
         <section className="announcements">
           {announcements.map(announcement => (
@@ -205,7 +188,7 @@ function App() {
               key={announcement.id} 
               className={`announcement announcement-${announcement.priority}`}
             >
-              <span className="announcement-icon">ℹ️</span>
+              <span className="announcement-icon">Announcement: </span>
               {announcement.title && <strong>{announcement.title}: </strong>}
               {announcement.message}
               {announcement.parking_lot_name && (
@@ -218,15 +201,13 @@ function App() {
 
       {error && (
         <div className="error-banner">
-          <span>⚠️ {error}</span>
+          <span>Error: {error}</span>
           <button onClick={fetchParkingLots}>Retry</button>
         </div>
       )}
 
-      {/* Main Content */}
       <main className="main-content">
         <div className="content-grid">
-          {/* Map Section */}
           <section className="map-section">
             <div className="section-header">
               <h2>Parking Lots Map</h2>
@@ -244,9 +225,8 @@ function App() {
             />
           </section>
 
-          {/* Filter Section */}
           <aside className="filter-section">
-            <h3>Filter by Permit</h3>
+            <h3>Filter by Parking</h3>
             <div className="filter-options">
               {Object.keys(permitFilters).map(permitType => (
                 <label key={permitType} className="filter-checkbox">
@@ -255,20 +235,19 @@ function App() {
                     checked={permitFilters[permitType]}
                     onChange={() => handlePermitFilterChange(permitType)}
                   />
-                  <span>{permitType} Permit</span>
+                  <span>{permitType}</span>
                 </label>
               ))}
             </div>
             
             <div className="filter-summary">
               <p>
-                Showing {filteredLotIds.length} of {parkingLots.length} lots
+                Showing {filteredLotIds.length} of {parkingLots.length-1} lots
               </p>
             </div>
           </aside>
         </div>
 
-        {/* Selected Lot Details */}
         {selectedLotData && (
           <section className="lot-details">
             <div className="lot-details-header">
@@ -312,55 +291,61 @@ function App() {
               </div>
             </div>
             
-            {/* Prediction Section */}
-            {selectedLotData.prediction && selectedLotData.prediction.predicted_occupancy !== null && (
-              <div className="prediction-section">
-                <h3>📊 Next Hour Prediction</h3>
-                <div className="prediction-content">
-                  <div className="prediction-main">
-                    <div className="prediction-stat">
-                      <span className="prediction-label">Predicted Occupancy</span>
-                      <span className="prediction-value prediction-occupancy">
-                        {selectedLotData.prediction.predicted_occupancy.toFixed(1)}%
-                      </span>
+            <div className="prediction-section">
+              <h3>Next Hour Prediction</h3>
+              {selectedLotData.prediction ? (
+                selectedLotData.prediction.predicted_occupancy !== null ? (
+                  <div className="prediction-content">
+                    <div className="prediction-main">
+                      <div className="prediction-stat">
+                        <span className="prediction-label">Expected Available</span>
+                        <span className="prediction-value prediction-available">
+                          ~{selectedLotData.prediction.predicted_available} spots
+                        </span>
+                      </div>
+                      <div className="prediction-stat">
+                        <span className="prediction-label">Predicted Occupancy</span>
+                        <span className="prediction-value prediction-occupancy">
+                          {selectedLotData.prediction.predicted_occupancy.toFixed(1)}%
+                        </span>
+                      </div>
+                      <div className="prediction-stat">
+                        <span className="prediction-label">Confidence</span>
+                        <span className={`prediction-badge confidence-${selectedLotData.prediction.confidence}`}>
+                          {selectedLotData.prediction.confidence.replace('_', ' ').split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')} 
+                          ({selectedLotData.prediction.confidence_percent}%)
+                        </span>
+                      </div>
                     </div>
-                    <div className="prediction-stat">
-                      <span className="prediction-label">Expected Available</span>
-                      <span className="prediction-value prediction-available">
-                        ~{selectedLotData.prediction.predicted_available} spots
-                      </span>
-                    </div>
-                    <div className="prediction-stat">
-                      <span className="prediction-label">Confidence</span>
-                      <span className={`prediction-badge confidence-${selectedLotData.prediction.confidence}`}>
-                        {selectedLotData.prediction.confidence.charAt(0).toUpperCase() + 
-                         selectedLotData.prediction.confidence.slice(1)} 
-                        ({selectedLotData.prediction.confidence_percent}%)
-                      </span>
-                    </div>
+                    {selectedLotData.prediction.message && (
+                      <div className="prediction-meta">
+                        <small>{selectedLotData.prediction.message}</small>
+                      </div>
+                    )}
+                    {selectedLotData.prediction.data_points > 0 && (
+                      <div className="prediction-meta">
+                        <small>
+                          Based on {selectedLotData.prediction.data_points} historical data points from similar 
+                          {' '}{selectedLotData.prediction.based_on_day} patterns around {selectedLotData.prediction.based_on_hour}:00
+                        </small>
+                      </div>
+                    )}
                   </div>
-                  <div className="prediction-meta">
-                    <small>
-                      Based on {selectedLotData.prediction.data_points} historical data points from similar 
-                      {' '}{selectedLotData.prediction.based_on_day} patterns around {selectedLotData.prediction.based_on_hour}:00
-                    </small>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {selectedLotData.prediction && selectedLotData.prediction.confidence === 'insufficient_data' && (
-              <div className="prediction-section prediction-no-data">
-                <h3>📊 Next Hour Prediction</h3>
+                ) : (
+                  <p className="prediction-message">
+                    {selectedLotData.prediction.message || 'Not enough historical data yet. System is collecting data.'}
+                  </p>
+                )
+              ) : (
                 <p className="prediction-message">
-                  Not enough historical data yet. Predictions will be available after a few weeks of data collection.
+                  Prediction unavailable
                 </p>
-              </div>
-            )}
+              )}
+            </div>
             
             {selectedLotData.permit_types && selectedLotData.permit_types.length > 0 && (
               <div className="permit-types">
-                <strong>Accepted Permits:</strong>
+                <strong>Accepted Parking:</strong>
                 <div className="permit-badges">
                   {selectedLotData.permit_types.map(permit => (
                     <span key={permit} className="permit-badge">{permit}</span>
@@ -368,13 +353,7 @@ function App() {
                 </div>
               </div>
             )}
-            
-            {selectedLotData.is_structure && (
-              <div className="lot-info">
-                <span className="info-badge">🏢 Parking Structure</span>
-              </div>
-            )}
-            
+
             {selectedLotData.source_timestamp && (
               <p className="data-timestamp">
                 Data from: {new Date(selectedLotData.source_timestamp).toLocaleString()}
@@ -384,10 +363,8 @@ function App() {
         )}
       </main>
 
-      {/* Footer */}
       <footer className="footer">
-        <p>Data sourced from CSUF Parking Services</p>
-        <p>This is an unofficial tool. For official information, visit parking.fullerton.edu</p>
+        <p>Data sourced from CSUF Parking Services • This is an unofficial tool</p>
       </footer>
     </div>
   );

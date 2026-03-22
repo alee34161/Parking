@@ -37,7 +37,6 @@ router.get('/lots', async (req, res, next) => {
       ORDER BY pl.name
     `);
 
-    // Parse JSON fields
     const formattedLots = lots.map(lot => ({
       ...lot,
       polygon_coordinates: lot.polygon_coordinates ? JSON.parse(lot.polygon_coordinates) : null,
@@ -97,10 +96,15 @@ router.get('/lots/:id', async (req, res, next) => {
     }
 
     const lot = lots[0];
+    
+    const { predictNextHourOccupancy } = await import('../services/prediction.js');
+    const prediction = await predictNextHourOccupancy(parseInt(id, 10));
+    
     const formattedLot = {
       ...lot,
       polygon_coordinates: lot.polygon_coordinates ? JSON.parse(lot.polygon_coordinates) : null,
-      permit_types: lot.permit_types ? JSON.parse(lot.permit_types) : []
+      permit_types: lot.permit_types ? JSON.parse(lot.permit_types) : [],
+      prediction: prediction
     };
 
     res.json({
