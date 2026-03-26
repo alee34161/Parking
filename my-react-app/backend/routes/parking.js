@@ -4,7 +4,6 @@ import { scrapeAndSave } from '../services/scraper.js';
 
 const router = express.Router();
 
-// GET /api/parking/lots - Get all parking lots with latest availability
 router.get('/lots', async (req, res, next) => {
   try {
     const lots = await query(`
@@ -53,7 +52,6 @@ router.get('/lots', async (req, res, next) => {
   }
 });
 
-// GET /api/parking/lots/:id - Get specific parking lot details
 router.get('/lots/:id', async (req, res, next) => {
   try {
     const { id } = req.params;
@@ -116,13 +114,11 @@ router.get('/lots/:id', async (req, res, next) => {
   }
 });
 
-// GET /api/parking/lots/:id/history - Get historical data for a lot
 router.get('/lots/:id/history', async (req, res, next) => {
   try {
     const { id } = req.params;
     const { hours = 24 } = req.query;
     
-    // Validate inputs
     if (!/^\d+$/.test(id)) {
       return res.status(400).json({ 
         success: false, 
@@ -163,7 +159,6 @@ router.get('/lots/:id/history', async (req, res, next) => {
   }
 });
 
-// GET /api/parking/announcements - Get active service announcements (from memory cache)
 router.get('/announcements', async (req, res, next) => {
   try {
     // Import the cache getter from scraper
@@ -180,10 +175,8 @@ router.get('/announcements', async (req, res, next) => {
   }
 });
 
-// POST /api/parking/refresh - Manually trigger scraping (protected endpoint)
 router.post('/refresh', async (req, res, next) => {
   try {
-    // In production, add authentication middleware here
     const apiKey = req.headers['x-api-key'];
     
     if (apiKey !== process.env.ADMIN_API_KEY) {
@@ -205,7 +198,6 @@ router.post('/refresh', async (req, res, next) => {
   }
 });
 
-// GET /api/parking/stats - Get system statistics
 router.get('/stats', async (req, res, next) => {
   try {
     const [lotStats] = await query(`
