@@ -14,10 +14,10 @@ CREATE TABLE parking_lots (
     latitude DECIMAL(10, 8),
     longitude DECIMAL(11, 8),
     
-
     polygon_coordinates JSON,
 
     permit_types JSON,
+    badge_offset VARCHAR(20) DEFAULT NULL,
     
     description TEXT,
     is_structure BOOLEAN DEFAULT FALSE,
@@ -77,13 +77,13 @@ CREATE TABLE service_announcements (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Insert initial parking lot data
-INSERT INTO parking_lots (name, total_spots, is_structure, has_levels, permit_types) VALUES
-('Nutwood Structure', 2484, TRUE, TRUE, JSON_ARRAY('A', 'B', 'Student')),
-('State College Structure', 1373, TRUE, TRUE, JSON_ARRAY('A', 'B', 'Student')),
-('Eastside North', 1880, FALSE, FALSE, JSON_ARRAY('A', 'Student')),
-('Eastside South', 1341, FALSE, FALSE, JSON_ARRAY('A', 'Student')),
-('S8 and S10', 2104, FALSE, FALSE, JSON_ARRAY('Student')),
-('Fullerton Free Church', 800, FALSE, FALSE, JSON_ARRAY('Student'));
+INSERT INTO parking_lots (name, total_spots, is_structure, has_levels, permit_types, badge_offset) VALUES
+('Nutwood Structure', 2484, TRUE, TRUE, JSON_ARRAY('A', 'B', 'Student'), NULL),
+('State College Structure', 1373, TRUE, TRUE, JSON_ARRAY('A', 'B', 'Student'), NULL),
+('Eastside North', 1880, FALSE, FALSE, JSON_ARRAY('A', 'Student'), 'left'),
+('Eastside South', 1341, FALSE, FALSE, JSON_ARRAY('A', 'Student'), 'right'),
+('S8 and S10', 2104, FALSE, FALSE, JSON_ARRAY('Student'), NULL),
+('Fullerton Free Church', 800, FALSE, FALSE, JSON_ARRAY('Student'), NULL);
 
 -- Create a view for latest parking availability
 CREATE OR REPLACE VIEW latest_parking_availability AS
@@ -95,6 +95,7 @@ SELECT
     pl.longitude,
     pl.polygon_coordinates,
     pl.permit_types,
+    pl.badge_offset,
     pl.is_structure,
     pl.has_levels,
     ps.available_spots,

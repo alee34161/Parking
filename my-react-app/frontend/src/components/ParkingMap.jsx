@@ -6,19 +6,31 @@ import './ParkingMap.css';
 mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_TOKEN;
 
 const getOccupancyColor = (occupancyRate) => {
-  if (occupancyRate <= 50) return '#22c55e';
-  if (occupancyRate <= 80) return '#eab308';
-  if (occupancyRate <= 95) return '#f97316';
+  if (occupancyRate <= 30) return '#22c55e';
+  if (occupancyRate <= 50) return '#eab308';
+  if (occupancyRate <= 70) return '#f97316';
   return '#dc2626';
 };
 
-// Pixel offset from the lot's lat/lng anchor point for the badge stack.
-// Positive x = right, negative x = left, negative y = up (Mapbox uses screen coords).
 const BADGE_OFFSETS = {
-  right:      [75,  0],
-  left:       [-75, 0],
+  right:      [50,  0],
+  left:       [-50, 0],
   'top-right': [14, -40],
   'top-left':  [-80, -40],
+};
+
+const normalizeBadgeOffsetKey = (rawValue) => {
+  if (rawValue == null) return null;
+  const normalized = String(rawValue)
+    .trim()
+    .toLowerCase()
+    .replace(/_/g, '-')
+    .replace(/\s+/g, '-');
+
+  if (BADGE_OFFSETS[normalized]) return normalized;
+  if (normalized === 'topright') return 'top-right';
+  if (normalized === 'topleft') return 'top-left';
+  return null;
 };
 
 const ParkingMap = ({ parkingLots, selectedLot, selectedLevel, onLotClick, onLevelClick, filteredLotIds }) => {
@@ -27,7 +39,6 @@ const ParkingMap = ({ parkingLots, selectedLot, selectedLevel, onLotClick, onLev
   const levelMarkersRef = useRef({});
   const [mapLoaded, setMapLoaded] = useState(false);
 
-  // Initialize map
   useEffect(() => {
     if (map.current) return;
 
@@ -52,7 +63,6 @@ const ParkingMap = ({ parkingLots, selectedLot, selectedLevel, onLotClick, onLev
     };
   }, []);
 
-  // Update polygon layers
   useEffect(() => {
     if (!map.current || !mapLoaded || !parkingLots.length) return;
 
@@ -155,11 +165,10 @@ const ParkingMap = ({ parkingLots, selectedLot, selectedLevel, onLotClick, onLev
 
   }, [parkingLots, mapLoaded, onLotClick, filteredLotIds]);
 
-  // Render level badge stacks for structures
+  // level badges for structures
   useEffect(() => {
     if (!map.current || !mapLoaded || !parkingLots.length) return;
 
-    // Remove old markers
     Object.values(levelMarkersRef.current).forEach(marker => marker.remove());
     levelMarkersRef.current = {};
 
@@ -172,12 +181,22 @@ const ParkingMap = ({ parkingLots, selectedLot, selectedLevel, onLotClick, onLev
         lot.levels.length > 0
     );
 
+    const mapCenterLng = map.current.getCenter().lng;
+
     structures.forEach(lot => {
       const isFiltered = filteredLotIds && !filteredLotIds.includes(lot.id);
-      const offsetKey = lot.badge_offset || 'right';
+      const explicitOffset = normalizeBadgeOffsetKey(
+        lot.badge_offset ??
+        lot.badgeOffset ??
+        lot.badgeAlignment ??
+        lot.alignment ??
+        lot.direction ??
+        lot.position
+      );
+      const defaultOffset = lot.longitude != null && lot.longitude > mapCenterLng ? 'left' : 'right';
+      const offsetKey = explicitOffset || defaultOffset;
       const [offsetX, offsetY] = BADGE_OFFSETS[offsetKey] || BADGE_OFFSETS.right;
 
-      // Reverse so lowest floor is at the bottom of the stack
       const levelsBottomUp = [...lot.levels].sort((a, b) => b.level_number - a.level_number);
 
       const badgeContainer = document.createElement('div');
@@ -195,7 +214,6 @@ const ParkingMap = ({ parkingLots, selectedLot, selectedLevel, onLotClick, onLev
         badge.style.backgroundColor = color;
         badge.style.borderColor = isSelected ? '#2563eb' : 'rgba(255,255,255,0.7)';
 
-        // Just the floor number + available count, no "L" prefix
         badge.innerHTML = `
           <span class="level-badge-floor">${level.level_number}</span>
           <span class="level-badge-spots">${level.available_spots ?? '?'}</span>
@@ -225,7 +243,6 @@ const ParkingMap = ({ parkingLots, selectedLot, selectedLevel, onLotClick, onLev
 
   }, [parkingLots, mapLoaded, filteredLotIds, selectedLevel, onLevelClick]);
 
-  // Highlight selected lot polygon
   useEffect(() => {
     if (!map.current || !mapLoaded || !parkingLots.length) return;
 

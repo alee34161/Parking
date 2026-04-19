@@ -9,7 +9,7 @@ router.get('/lots', async (req, res, next) => {
   try {
     const lots = await query(`
       SELECT pl.id, pl.name, pl.total_spots, pl.latitude, pl.longitude,
-             pl.polygon_coordinates, pl.permit_types, pl.is_structure, pl.has_levels, pl.description,
+             pl.polygon_coordinates, pl.permit_types, pl.badge_offset, pl.is_structure, pl.has_levels, pl.description,
              ps.available_spots, ps.occupancy_percentage, ps.status, ps.source_timestamp, ps.scraped_at
       FROM parking_lots pl
       LEFT JOIN parking_snapshots ps ON pl.id = ps.parking_lot_id
