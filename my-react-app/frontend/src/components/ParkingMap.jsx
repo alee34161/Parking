@@ -6,9 +6,9 @@ import './ParkingMap.css';
 mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_TOKEN;
 
 const getOccupancyColor = (occupancyRate) => {
-  if (occupancyRate <= 30) return '#22c55e';
-  if (occupancyRate <= 50) return '#eab308';
-  if (occupancyRate <= 70) return '#f97316';
+  if (occupancyRate <= 50) return '#22c55e';
+  if (occupancyRate <= 70) return '#eab308';
+  if (occupancyRate <= 90) return '#f97316';
   return '#dc2626';
 };
 
