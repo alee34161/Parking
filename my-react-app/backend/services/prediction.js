@@ -1,8 +1,6 @@
 import { query } from '../config/database.js';
 
-// ─────────────────────────────────────────────────────────────
-// Lot-level prediction (unchanged logic, queries parking_snapshots)
-// ─────────────────────────────────────────────────────────────
+// Lot prediction
 export async function predictNextHourOccupancy(lotId) {
   try {
     const now = new Date();
@@ -61,9 +59,7 @@ export async function predictNextHourOccupancy(lotId) {
   }
 }
 
-// ─────────────────────────────────────────────────────────────
-// Level prediction (queries parking_level_snapshots)
-// ─────────────────────────────────────────────────────────────
+// Level prediction
 export async function predictNextHourOccupancyForLevel(levelId) {
   try {
     const now = new Date();
@@ -121,9 +117,7 @@ export async function predictNextHourOccupancyForLevel(levelId) {
   }
 }
 
-// ─────────────────────────────────────────────────────────────
-// Shared prediction math
-// ─────────────────────────────────────────────────────────────
+// Prediction function/math
 async function buildPrediction(historicalData, now, dayOfWeek, nextHour, type, id) {
   const totalOccupancy = historicalData.reduce((sum, r) => sum + (r.occupancy_percentage || 0), 0);
   const avgOccupancy = totalOccupancy / historicalData.length;
