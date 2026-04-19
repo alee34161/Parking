@@ -4,7 +4,7 @@ import { scrapeAndSave } from '../services/scraper.js';
 
 const router = express.Router();
 
-// ── GET /lots ─────────────────────────────────────────────────
+// GET lots
 router.get('/lots', async (req, res, next) => {
   try {
     const lots = await query(`
@@ -30,8 +30,7 @@ router.get('/lots', async (req, res, next) => {
   } catch (error) { next(error); }
 });
 
-// ── GET /levels — all current level snapshots for all active structures ──
-// Called once on app load so badges render immediately without clicking
+// GET levels
 router.get('/levels', async (req, res, next) => {
   try {
     const levels = await query(`
@@ -58,7 +57,7 @@ router.get('/levels', async (req, res, next) => {
   } catch (error) { next(error); }
 });
 
-// ── GET /lots/:id ─────────────────────────────────────────────
+// GET lots using id
 router.get('/lots/:id', async (req, res, next) => {
   try {
     const { id } = req.params;
@@ -107,7 +106,7 @@ router.get('/lots/:id', async (req, res, next) => {
   } catch (error) { next(error); }
 });
 
-// ── GET /lots/:id/levels/:levelId ────────────────────────────
+// GET lots and levels by ids
 router.get('/lots/:id/levels/:levelId', async (req, res, next) => {
   try {
     const { id, levelId } = req.params;
@@ -134,7 +133,7 @@ router.get('/lots/:id/levels/:levelId', async (req, res, next) => {
   } catch (error) { next(error); }
 });
 
-// ── GET /lots/:id/history ─────────────────────────────────────
+// GET lot history by id
 router.get('/lots/:id/history', async (req, res, next) => {
   try {
     const { id } = req.params;
@@ -155,7 +154,7 @@ router.get('/lots/:id/history', async (req, res, next) => {
   } catch (error) { next(error); }
 });
 
-// ── GET /lots/:id/levels/:levelId/history ────────────────────
+// GET lot and level history by id
 router.get('/lots/:id/levels/:levelId/history', async (req, res, next) => {
   try {
     const { id, levelId } = req.params;
@@ -176,7 +175,7 @@ router.get('/lots/:id/levels/:levelId/history', async (req, res, next) => {
   } catch (error) { next(error); }
 });
 
-// ── GET /announcements ────────────────────────────────────────
+// GET cached announcements
 router.get('/announcements', async (req, res, next) => {
   try {
     const { getCachedAnnouncements } = await import('../services/scraper.js');
@@ -185,7 +184,7 @@ router.get('/announcements', async (req, res, next) => {
   } catch (error) { next(error); }
 });
 
-// ── POST /refresh ─────────────────────────────────────────────
+// POST refresh
 router.post('/refresh', async (req, res, next) => {
   try {
     const apiKey = req.headers['x-api-key'];
@@ -195,7 +194,7 @@ router.post('/refresh', async (req, res, next) => {
   } catch (error) { next(error); }
 });
 
-// ── GET /stats ────────────────────────────────────────────────
+// GET stats
 router.get('/stats', async (req, res, next) => {
   try {
     const [lotStats] = await query(`
