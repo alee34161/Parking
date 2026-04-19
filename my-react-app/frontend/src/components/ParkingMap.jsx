@@ -197,7 +197,7 @@ const ParkingMap = ({ parkingLots, selectedLot, selectedLevel, onLotClick, onLev
       const offsetKey = explicitOffset || defaultOffset;
       const [offsetX, offsetY] = BADGE_OFFSETS[offsetKey] || BADGE_OFFSETS.right;
 
-      const levelsBottomUp = [...lot.levels].sort((a, b) => b.level_number - a.level_number);
+      const levelsBottomUp = [...lot.levels].sort((a, b) => a.level_number - b.level_number);
 
       const badgeContainer = document.createElement('div');
       badgeContainer.className = 'level-badge-stack';
@@ -216,7 +216,6 @@ const ParkingMap = ({ parkingLots, selectedLot, selectedLevel, onLotClick, onLev
 
         badge.innerHTML = `
           <span class="level-badge-floor">${level.level_number}</span>
-          <span class="level-badge-spots">${level.available_spots ?? '?'}</span>
         `;
 
         if (!isFiltered) {

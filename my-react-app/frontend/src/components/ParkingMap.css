@@ -50,7 +50,7 @@
 */
 .level-badge-stack {
   display: flex;
-  flex-direction: column-reverse; /* L1 rendered last in DOM = visually at bottom */
+  flex-direction: column-reverse; /* L1 rendered first in DOM = visually at bottom */
   gap: 2px;
   pointer-events: none; /* let clicks fall through to individual badges */
 }
@@ -58,8 +58,7 @@
 .level-badge {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 3px;
+  justify-content: center;
   padding: 1px 5px;
   border-radius: 3px;
   border: 1.5px solid rgba(255, 255, 255, 0.7);
