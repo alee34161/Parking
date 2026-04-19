@@ -2,21 +2,19 @@ import Database from 'better-sqlite3';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
+// default sqlite database file in backend folder. use for local host and development testing
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Create database file in backend directory
 const dbPath = path.join(__dirname, '..', 'parking.db');
 const db = new Database(dbPath, { verbose: console.log });
 
 
-// Enable foreign keys
 db.pragma('foreign_keys = ON');
 
-// Helper function to execute queries (mimics MySQL2 interface)
 export async function query(sql, params = []) {
   try {
-    // Normalize SQL for SQLite
     sql = sql.replace(/\?/g, '?'); // SQLite uses ? for parameters
     
     if (sql.trim().toUpperCase().startsWith('SELECT') || 
@@ -38,7 +36,6 @@ export async function query(sql, params = []) {
   }
 }
 
-// Helper function for transactions
 export async function transaction(callback) {
   const trans = db.transaction(() => {
     return callback(db);

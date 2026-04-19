@@ -18,7 +18,6 @@ if (USE_SQLITE) {
   }
 } else {
   try {
-    // Import MySQL configuration dynamically
     const dbModule = await import('./database-mysql.js');
     query = dbModule.query;
     transaction = dbModule.transaction;
@@ -29,6 +28,5 @@ if (USE_SQLITE) {
   }
 }
 
-// Re-export the functions and default export
 export { query, transaction };
 export default db;

@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-// for aurora if i want to deploy
+// for aurora if you want to deploy
 
 const pool = mysql.createPool({
   host: process.env.DB_HOST,
