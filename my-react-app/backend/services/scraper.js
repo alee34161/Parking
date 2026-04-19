@@ -187,7 +187,21 @@ export async function scrapeAndSave() {
   }
 }
 
-export function startScheduledScraping(intervalMinutes = 5) {
+const DEFAULT_SCRAPE_INTERVAL_MINUTES = 1;
+
+const getScrapeIntervalMinutes = () => {
+  const rawValue = process.env.SCRAPE_INTERVAL_MINUTES;
+  const parsed = parseInt(rawValue, 10);
+
+  if (!Number.isNaN(parsed) && parsed > 0) {
+    return parsed;
+  }
+
+  return DEFAULT_SCRAPE_INTERVAL_MINUTES;
+};
+
+export function startScheduledScraping(intervalMinutes) {
+  const interval = intervalMinutes ?? getScrapeIntervalMinutes();
   scrapeAndSave();
-  setInterval(() => scrapeAndSave(), intervalMinutes * 60 * 1000);
+  setInterval(() => scrapeAndSave(), interval * 60 * 1000);
 }

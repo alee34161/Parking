@@ -64,7 +64,7 @@ function App() {
       fetchParkingLots();
       fetchAllLevels();
       fetchAnnouncements();
-    }, 5 * 60 * 1000);
+    }, 1 * 60 * 1000); // how often to refresh data,   minutes * seconds * ms
 
     return () => clearInterval(interval);
   }, []);
@@ -85,7 +85,6 @@ function App() {
     }
   };
 
-  // Fetch all level snapshots upfront — keyed by lot id so map badges work immediately
   const fetchAllLevels = async () => {
     try {
       const response = await fetch(`${API_BASE_URL}/parking/levels`);
@@ -176,7 +175,7 @@ function App() {
 
   const filteredLotIds = getFilteredLotIds();
 
-  // Merge allLevels into each lot for the map — no clicking required
+  // Merge allLevels into each lot for the map
   const lotsWithLevels = parkingLots.map(lot => ({
     ...lot,
     levels: allLevels[lot.id] || []
