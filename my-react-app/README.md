@@ -56,3 +56,10 @@ npm run dev
 ```
 
 Frontend runs on `http://localhost:5173`
+
+If building for production:
+```bash
+npm run build
+```
+
+Build will be in /dist, but note that Mapbox key will be vulnerable and should be limited to only accept from the frontend URL.
