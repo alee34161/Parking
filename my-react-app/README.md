@@ -2,7 +2,7 @@
 
 ## Prerequisites
 
-- Node.js 18+ ([Download](https://nodejs.org/))
+- Node.js 20+ ([Download](https://nodejs.org/))
 - Mapbox account ([Sign up free](https://account.mapbox.com/))
 - CSUF Parking and Transportation Department WEB API URL /GetAllLotCountsWithLevel
 
