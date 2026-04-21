@@ -57,18 +57,6 @@ function App() {
     'Hourly Parking': true
   });
 
-  useEffect(() => {
-    Promise.all([fetchParkingLots(), fetchAllLevels(), fetchAnnouncements()]);
-
-    const interval = setInterval(() => {
-      fetchParkingLots();
-      fetchAllLevels();
-      fetchAnnouncements();
-    }, 1 * 60 * 1000); // how often to refresh data,   minutes * seconds * ms
-
-    return () => clearInterval(interval);
-  }, []);
-
   const fetchParkingLots = async () => {
     try {
       const response = await fetch(`${API_BASE_URL}/parking/lots`);
@@ -113,6 +101,18 @@ function App() {
       console.error('Error fetching announcements:', err);
     }
   };
+
+  useEffect(() => {
+    Promise.all([fetchParkingLots(), fetchAllLevels(), fetchAnnouncements()]);
+
+    const interval = setInterval(() => {
+      fetchParkingLots();
+      fetchAllLevels();
+      fetchAnnouncements();
+    }, 1 * 60 * 1000); // how often to refresh data,   minutes * seconds * ms
+
+    return () => clearInterval(interval);
+  }, []);
 
   const handleLotClick = async (lotId) => {
     setSelectedLevel(null);
