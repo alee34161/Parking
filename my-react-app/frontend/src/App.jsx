@@ -4,6 +4,7 @@ import './App.css';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
 
+// prediction section
 function PredictionBlock({ prediction }) {
   if (!prediction) return <p className="prediction-message">Prediction unavailable</p>;
   if (prediction.predicted_occupancy === null) {
@@ -40,7 +41,7 @@ function PredictionBlock({ prediction }) {
 
 function App() {
   const [parkingLots, setParkingLots] = useState([]);
-  const [allLevels, setAllLevels] = useState({});        // { [lotId]: [...levels] }
+  const [allLevels, setAllLevels] = useState({});
   const [announcements, setAnnouncements] = useState([]);
   const [selectedLot, setSelectedLot] = useState(null);
   const [selectedLotDetails, setSelectedLotDetails] = useState(null);
@@ -57,6 +58,7 @@ function App() {
     'Hourly Parking': true
   });
 
+  // fetch parking lots from backend
   const fetchParkingLots = async () => {
     try {
       const response = await fetch(`${API_BASE_URL}/parking/lots`);
@@ -73,6 +75,7 @@ function App() {
     }
   };
 
+  // fetch parking levels from backend
   const fetchAllLevels = async () => {
     try {
       const response = await fetch(`${API_BASE_URL}/parking/levels`);
@@ -91,6 +94,7 @@ function App() {
     }
   };
 
+  // fetch announcements from backend
   const fetchAnnouncements = async () => {
     try {
       const response = await fetch(`${API_BASE_URL}/parking/announcements`);
@@ -102,6 +106,7 @@ function App() {
     }
   };
 
+  // refresh data
   useEffect(() => {
     Promise.all([fetchParkingLots(), fetchAllLevels(), fetchAnnouncements()]);
 
@@ -114,6 +119,7 @@ function App() {
     return () => clearInterval(interval);
   }, []);
 
+  // open detailed section
   const handleLotClick = async (lotId) => {
     setSelectedLevel(null);
     setSelectedLevelDetails(null);
@@ -133,6 +139,7 @@ function App() {
     }
   };
 
+  // open detailed section
   const handleLevelClick = async (lotId, levelId) => {
     if (selectedLot !== lotId) await handleLotClick(lotId);
     setSelectedLevel({ id: levelId, lotId });
@@ -147,6 +154,7 @@ function App() {
     }
   };
 
+  // close detailed sections
   const handleCloseDetails = () => {
     setSelectedLot(null);
     setSelectedLotDetails(null);
@@ -159,10 +167,12 @@ function App() {
     setSelectedLevelDetails(null);
   };
 
+  // permit filter handler
   const handlePermitFilterChange = (permitType) => {
     setPermitFilters(prev => ({ ...prev, [permitType]: !prev[permitType] }));
   };
 
+  // filter based on selected permit types
   const getFilteredLotIds = () => {
     const activePermits = Object.keys(permitFilters).filter(k => permitFilters[k]);
     return parkingLots

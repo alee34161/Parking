@@ -3,11 +3,12 @@ import { load } from 'cheerio';
 import { query } from '../config/database.js';
 
 const PARKING_API_URL = process.env.PARKING_API_URL || '';
-const ANNOUNCEMENT_URL = 'https://parking.fullerton.edu/';
+const ANNOUNCEMENT_URL = 'https://parking.fullerton.edu/'; //hard coded homepage
 
 let cachedAnnouncements = [];
 let lastAnnouncementUpdate = null;
 
+// helper functions for announcements and input sanitization
 export function getCachedAnnouncements() {
   return { announcements: cachedAnnouncements, lastUpdate: lastAnnouncementUpdate };
 }
@@ -16,6 +17,7 @@ function sanitizeString(str) {
   return str.replace(/\s+/g, ' ').trim();
 }
 
+// used to be a scraper; now uses official WEB API
 export async function scrapeParkingData() {
   try {
     if (!PARKING_API_URL) throw new Error('PARKING_API_URL not configured');
@@ -65,6 +67,7 @@ export async function scrapeParkingData() {
   }
 }
 
+// scraper for announcement from homepage
 export async function scrapeServiceAnnouncements() {
   try {
     const response = await axios.get(ANNOUNCEMENT_URL, {
@@ -115,6 +118,7 @@ export async function scrapeServiceAnnouncements() {
   }
 }
 
+// save data to database parking snapshots
 export async function saveParkingData(parkingData, levelsByLotId) {
   try {
     const timestamp = new Date().toISOString();
@@ -170,6 +174,7 @@ export async function saveParkingData(parkingData, levelsByLotId) {
   }
 }
 
+// overall scrape and save function
 export async function scrapeAndSave() {
   try {
     const [{ lots: parkingData, levelsByLotId }, announcements] = await Promise.all([
@@ -189,6 +194,7 @@ export async function scrapeAndSave() {
 
 const DEFAULT_SCRAPE_INTERVAL_MINUTES = 1;
 
+// function to default to 1 minute if no interval provided
 const getScrapeIntervalMinutes = () => {
   const rawValue = process.env.SCRAPE_INTERVAL_MINUTES;
   const parsed = parseInt(rawValue, 10);
@@ -200,6 +206,7 @@ const getScrapeIntervalMinutes = () => {
   return DEFAULT_SCRAPE_INTERVAL_MINUTES;
 };
 
+// run the scraper
 export function startScheduledScraping(intervalMinutes) {
   const interval = intervalMinutes ?? getScrapeIntervalMinutes();
   scrapeAndSave();

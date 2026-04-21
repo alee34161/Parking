@@ -5,6 +5,7 @@ import './ParkingMap.css';
 
 mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_TOKEN;
 
+// color code rules; adjust as wanted
 const getOccupancyColor = (occupancyRate) => {
   if (occupancyRate <= 50) return '#22c55e';
   if (occupancyRate <= 70) return '#eab308';
@@ -12,6 +13,7 @@ const getOccupancyColor = (occupancyRate) => {
   return '#dc2626';
 };
 
+// level overview offset from structure
 const BADGE_OFFSETS = {
   right:      [50,  0],
   left:       [-50, 0],
