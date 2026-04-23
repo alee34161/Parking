@@ -3,6 +3,7 @@ import ParkingMap from './components/ParkingMap';
 import './App.css';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
+const refreshMinutes = import.meta.env.VITE_REFRESH_INTERVAL || 1;
 
 // prediction section
 function PredictionBlock({ prediction }) {
@@ -114,7 +115,7 @@ function App() {
       fetchParkingLots();
       fetchAllLevels();
       fetchAnnouncements();
-    }, 1 * 60 * 1000); // how often to refresh data,   minutes * seconds * ms
+    }, refreshMinutes * 60 * 1000); // how often to refresh data
 
     return () => clearInterval(interval);
   }, []);
